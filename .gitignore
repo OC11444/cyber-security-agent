@@ -1,0 +1,22 @@
+# Virtual environments
+venv/
+.venv/
+
+# Large model files
+vosk-model-small-en-us-0.15/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Logs
+logs/
+*.log
+output.log
+
+# Workspace config
+workspace.code-workspace
+
+# IDE config files
+.vscode/
+.idea/

@@ -1,0 +1,50 @@
+name: 🧪 Live Mode Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  live-test:
+    runs-on: ubuntu-latest
+    name: 🚀 Run Assistant in LIVE Mode
+
+    steps:
+      # 📥 Checkout Code
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      # 🐍 Set up Python
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # 🛠️ Install System Dependencies (for PyAudio or others)
+      - name: 🛠️ Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
+      # 🔐 Set up Environment Variables (from GitHub Secrets)
+      - name: 🔐 Set Environment Variables
+        run: |
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          echo "GEMINI_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
+          echo "MODEL_PREFERENCE=openai" >> .env
+        shell: bash
+
+      # 📦 Install Dependencies
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 🧪 Run Assistant in Live Mode with Simulated Input
+      - name: ✅ Run Assistant in LIVE Mode
+        run: |
+          echo "show tools" | python main.py

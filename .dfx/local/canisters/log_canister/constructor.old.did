@@ -1,0 +1,4 @@
+service : {
+  get_logs: () -> (vec text) query;
+  log: (message: text) -> (text);
+}

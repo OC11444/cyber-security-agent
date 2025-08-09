@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "canisters": {
+    "log_canister": {
+      "type": "motoko",
+      "main": "src/log_canister/main.mo"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": ""
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "type": "persistent",
+      "providers": ["https://ic0.app"]
+    }
+  }
+}

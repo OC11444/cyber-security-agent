@@ -1,0 +1,38 @@
+name: 🧪 Syntax & Unit Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # 🛠️ Install System Dependencies (for PyAudio)
+      - name: 🛠️ Install System Dependencies (for PyAudio)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
+      - name: 📦 Install dependencies + flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: 🔍 Run flake8 (non-blocking)
+        continue-on-error: true
+        run: |
+          echo "Running flake8 checks..."
+          if [ -f .flake8 ]; then
+            flake8 . --config=.flake8 || true
+          else
+            echo "⚠️ .flake8 config not found. Using default flake8 rules."
+            flake8 . || true

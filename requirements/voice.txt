@@ -1,0 +1,12 @@
+sounddevice
+
+
+# Voice dependencies
+pyaudio
+-r base.txt
+SpeechRecognition
+pyttsx3
+pyaudio 
+pyttsx3
+pyaudio
+speechrecognition

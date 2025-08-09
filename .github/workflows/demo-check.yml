@@ -1,0 +1,47 @@
+name: 🧪 Demo Mode Test
+
+on:
+  pull_request:
+    branches:
+      - demo-mode-final
+  push:
+    branches:
+      - demo-mode-final
+
+jobs:
+  demo-test:
+    runs-on: ubuntu-latest
+    name: 🚀 Run Demo Mode
+
+    steps:
+      # 📥 1. Checkout code
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      # 🐍 2. Set up Python
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # 🛠️ 2.5 Install system dependencies (e.g., for PyAudio)
+      - name: 🛠️ Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
+      # 📦 3. Install dependencies
+      - name: 📦 Install Dependencies
+        run: |
+          echo "🔧 Installing dependencies..."
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+          else
+            echo "⚠️ No requirements.txt found, skipping install."
+          fi
+
+      # 🧪 4. Run in DEMO mode (simulate input to avoid hanging in CI)
+      - name: ✅ Run Assistant in DEMO Mode
+        run: |
+          echo "show tools" | python main.py --demo

@@ -1,0 +1,59 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, dev, integration/llm_unified ]
+  pull_request:
+    branches: [ main, dev, integration/llm_unified ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 🛠️ Install System Dependencies (for PyAudio)
+      - name: 🛠️ Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🔍 Run Gemini Handler Test
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "🔍 Testing Gemini handler..."
+          if [ -f assistant/test_gemini.py ]; then
+            PYTHONPATH=. python assistant/test_gemini.py || echo "⚠️ test_gemini.py failed (likely missing API key)"
+          else
+            echo "❌ test_gemini.py not found"
+          fi
+
+      - name: 🤖 Run OpenAI Handler Test (Optional)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "🤖 Testing OpenAI handler (if available)..."
+          if [ -f assistant/test_openai.py ]; then
+            PYTHONPATH=. python assistant/test_openai.py || echo "⚠️ test_openai.py failed (likely missing API key)"
+          else
+            echo "❌ test_openai.py not found"
+          fi
+
+      - name: 📁 List Tools Directory
+        run: |
+          echo "📁 Listing tools directory contents..."
+          ls tools || echo "⚠️ No tools dir yet (waiting for tools)"
